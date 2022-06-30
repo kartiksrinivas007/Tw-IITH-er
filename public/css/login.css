@@ -24,8 +24,8 @@ form{
 
 }
 
-input[type="text"]
-input[type="email"]
+input[type="text"],
+input[type="email"],
 input[type="password"] {
     margin-bottom: 20px;
     padding: 5px 10px;
