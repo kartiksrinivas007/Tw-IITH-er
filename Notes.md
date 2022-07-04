@@ -13,4 +13,4 @@
 * .d-none basically means not displayed
 * #1FA2F1 and #0099ff are changed colors
 * :root for creating a variable in css
-* Make everyhting a flex ! nearly all things for looking oredered, use flex-direction and justify-content and aling -items for centering
+* Make everyhting a flex ! nearly all things for looking ordered, use flex-direction and justify-content and align -items for centering
