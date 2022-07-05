@@ -14,3 +14,6 @@
 * #1FA2F1 and #0099ff are changed colors
 * :root for creating a variable in css
 * Make everyhting a flex ! nearly all things for looking ordered, use flex-direction and justify-content and align -items for centering
+* The website basically accesses the public page as well, it needs paths from public onwards
+* Create containers on Code, and then code it on the inspect option in the website, every section should have its own container
+* It's usefult to define a common.js file that shares functionality on the frontend for all pages
