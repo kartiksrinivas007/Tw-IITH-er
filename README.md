@@ -4,6 +4,8 @@
 
 First make sure you have npm installed , then run :-
 <br>
-`npm install`
+```Console
+npm install
+npm start
+```
 <br>
-`npm start`
