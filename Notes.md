@@ -17,3 +17,5 @@
 * The website basically accesses the public page as well, it needs paths from public onwards
 * Create containers on Code, and then code it on the inspect option in the website, every section should have its own container
 * It's usefult to define a common.js file that shares functionality on the frontend for all pages
+* jquery has the ability to not keyup and keydown events accordingly these events happen within particular elements which can be referred to using their id's
+`$(#idname)` can be used to extract the contents and store in a var
