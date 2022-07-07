@@ -144,7 +144,7 @@ button {
 
 .username,
 .date {
-    color: var(--lightGrey);
+    color: var(--greyText);
 }
 
 .displayName {
