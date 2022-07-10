@@ -363,14 +363,13 @@ function createPostHtml(postData) {
                         Retweeted by <a href='/profile/${retweetedBy}'>@${retweetedBy}</a>    
                     </span>`
     }
+    var replyFlag = "";
     if(postData.replyTo){
 
         if(!postData.replyTo._id){
             return alert("Reply to is not populated");
         }
-        else if(!postData.replyTo.postedBy._id){
-            return alert("No postedBy budi");
-        }
+       
 
         var replyToUsername = postData.replyTo.postedBy.username;
         replyFlag = `<div class = 'replyFlag'>
