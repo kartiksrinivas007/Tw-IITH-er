@@ -228,30 +228,53 @@ $("#postTextarea, #replyTextarea").keyup(event => {
     submitButton.prop("disabled", false);
 })
 
-$("#submitPostButton").click(() => {
+$("#submitPostButton, #submitReplyButton").click(() => {
     var button = $(event.target);
-    var textbox = $("#postTextarea");
+
+    var isModal = button.parents(".modal").length == 1;
+    var textbox = isModal ? $("#replyTextarea"):$("#postTextarea");
+
 
     var data = {
         content: textbox.val()
     }
 
+    if(isModal){
+        //find id
+        var id = button.data().id;
+        if( id == null){
+            return alert ("button id is null nigga");
+        }
+        data.replyTo = id;
+    }
+
+    
     $.post("/api/posts", data, postData => {
-        
-        var html = createPostHtml(postData);
-        $(".postsContainer").prepend(html);
-        textbox.val("");
-        button.prop("disabled", true);
+        if(postData.replyTo){
+            location.reload();
+        }
+        else{
+            var html = createPostHtml(postData);
+            $(".postsContainer").prepend(html);
+            textbox.val("");
+            button.prop("disabled", true);
+        }
     })
 })
 
 $("#replyModal").on("show.bs.modal", (event) => {
     var button = $(event.relatedTarget);
     var postId = getPostIdFromElement(button);
+    $("#submitReplyButton").data("id",postId);
 
     $.get("/api/posts/" + postId, results => {
         outputPosts(results, $("#originalPostContainer"))
     })
+})
+
+//for handling the latency issue use hidden bootstrap model apparently
+$("#replyModal").on("hidden.bs.modal", (event) => {
+    $("#originalPostContainer").html("");
 })
 
 $(document).on("click", ".likeButton", (event) => {
@@ -340,7 +363,20 @@ function createPostHtml(postData) {
                         Retweeted by <a href='/profile/${retweetedBy}'>@${retweetedBy}</a>    
                     </span>`
     }
+    if(postData.replyTo){
 
+        if(!postData.replyTo._id){
+            return alert("Reply to is not populated");
+        }
+        else if(!postData.replyTo.postedBy._id){
+            return alert("No postedBy budi");
+        }
+
+        var replyToUsername = postData.replyTo.postedBy.username;
+        replyFlag = `<div class = 'replyFlag'>
+                            Replying to <a href = '/profile/${replyToUsername}'>@${replyToUsername}<a>
+                    </div>`
+    }
     return `<div class='post' data-id='${postData._id}'>
                 <div class='postActionContainer'>
                     ${retweetText}
@@ -355,6 +391,7 @@ function createPostHtml(postData) {
                             <span class='username'>@${postedBy.username}</span>
                             <span class='date'>${timestamp}</span>
                         </div>
+                        ${replyFlag}
                         <div class='postBody'>
                             <span>${postData.content}</span>
                         </div>
