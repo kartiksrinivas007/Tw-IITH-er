@@ -6,7 +6,7 @@
     --blueLight : #F2D2BD;
     --greyText:rgb(101, 119, 134);
     --greyButtonText: rgba(0,0,0,0.34);
-    --brown: #B0703C
+    --brown: #B0703C;
     --redBackground: rgba(226,34,94,0.1);
     --green: rgb(23,191,99);
     --greenBackground: rgba(23,191,99,0.1);
@@ -194,11 +194,11 @@ button i {
     border-radius: 50%;
 }
 
-.postButtonContainer.brown button.active{
-    color: var(--brown);
+.postButtonContainer.red button.active{
+    color: var(--red);
 }
 
-.postButtonContainer.brown button:hover {
+.postButtonContainer.red button:hover {
     color: var(--red);
     background-color: var(--redBackground)
 }
