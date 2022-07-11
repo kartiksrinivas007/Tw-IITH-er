@@ -277,6 +277,29 @@ $("#replyModal").on("hidden.bs.modal", (event) => {
     $("#originalPostContainer").html("");
 })
 
+$("#deletePostModal").on("show.bs.modal", (event) => {
+    var button = $(event.relatedTarget);
+    var postId = getPostIdFromElement(button);
+    $("#deletePostButton").data("id",postId);
+    //pass postid to data
+})
+//this one will be there when the page loads
+$("#deletePostButton").click((event) => {
+    var PostId = $(event.target).data("id");
+    //now make an ajax call;
+    $.ajax({
+        url: `/api/posts/${PostId}`,
+        type: "DELETE",
+        success: () => {
+           location.reload();
+        }
+    })
+
+
+
+})
+
+//attached to the document instead becase it isnt on the page when the page loads thsi happens during post loading
 $(document).on("click", ".likeButton", (event) => {
     var button = $(event.target);
     var postId = getPostIdFromElement(button);
@@ -386,6 +409,11 @@ function createPostHtml(postData, largeFont = false) {
                             Replying to <a href = '/profile/${replyToUsername}'>@${replyToUsername}<a>
                     </div>`
     }
+
+    var buttons = "";
+    if(postData.postedBy._id == userLoggedIn._id){
+        buttons  =`<button data id = "${postData._id}" data-toggle="modal" data-target="#deletePostModal"><i class = 'fas fa-times'></i></button>`
+    }
     return `<div class='post ${largeFontClass}' data-id='${postData._id}'>
                 <div class='postActionContainer'>
                     ${retweetText}
@@ -399,6 +427,7 @@ function createPostHtml(postData, largeFont = false) {
                             <a href='/profile/${postedBy.username}' class='displayName'>${displayName}</a>
                             <span class='username'>@${postedBy.username}</span>
                             <span class='date'>${timestamp}</span>
+                            ${buttons}
                         </div>
                         ${replyFlag}
                         <div class='postBody'>

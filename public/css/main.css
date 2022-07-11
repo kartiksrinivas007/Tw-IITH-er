@@ -233,3 +233,10 @@ button i {
     font-size: 23px;
 
 }
+.postContentContainer .header {
+    display :flex;
+    
+}
+.postContentContainer .header .date {
+    flex : 1;
+}
