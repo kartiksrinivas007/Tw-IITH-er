@@ -2,8 +2,13 @@ const express = require('express');
 const app = express();
 const router = express.Router();
 const bodyParser = require("body-parser")
+const multer = require("multer")
 const User = require('../../schemas/UserSchema');
 const Post = require('../../schemas/PostSchema');
+const upload = multer({dest: "uploads/"}); //store the files here !!
+const path = require("path");
+const fs = require("fs");
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -57,4 +62,26 @@ router.get("/:userId/followers", async (req, res, next) => {
     })
 });
 
+router.post("/profilePicture", upload.single("croppedImage") , async(req, res, next) =>{
+    //now we will use a package called multer that handles all the nasty image handling stuff
+    //this behaves like middleware we found this online
+    if(!req.file){
+        console.log("No file uploaded with ajax request");
+        return res.sendStatus(400);
+    }
+    //WE MUST HANDLE THIS ROUTE !!!!
+    var filePath = `/uploads/images/${req.file.filename}.png`; //file is a png??
+    var tempPath = req.file.path;
+    var targetPath = path.join(__dirname,`../../${filePath}`)
+    //now move the file from that location to this one since we need it to be acessed for upload purposes on all locations
+    fs.rename(tempPath, targetPath, async error => {
+        if(error != null){
+            console.log(error);
+            return res.sendStatus(400);
+        }
+        req.session.user = await User.findByIdAndUpdate(req.session.user._id, {profilePic : filePath},{new : true});
+        //needs to put it inside the session
+        res.sendStatus(204);
+    });
+});
 module.exports = router;

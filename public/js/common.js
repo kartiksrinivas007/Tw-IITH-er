@@ -1,3 +1,6 @@
+//globals
+var cropper;
+
 $("#postTextarea, #replyTextarea").keyup(event => {
     var textbox = $(event.target);
     var value = textbox.val().trim();
@@ -87,7 +90,53 @@ $("#deletePostButton").click((event) => {
 
 })
 
+$("#filePhoto").change(function() { //using arrow function causes a problem use a regular one, also use this instead of event.target
+    // var input = $(event.target);
+    if (this.files && this.files[0]){
+        var reader = new FileReader(); //JS object !
+        reader.onload = (e) => {
+                var image = document.getElementById("imagePreview"); //get the elemtn via JS
+                image.src = e.target.result
+                // $("#imagePreview").attr("src", e.target.result); //setting attributes of the image preview div !!
+                //now we make a cropper object
+                if(cropper !== undefined){
+                    cropper.destroy();
+                }
+                cropper = new Cropper(image , {
+                    aspectRatio : 1/1,
+                    background : false
+                });
+
+
+        }
+        reader.readAsDataURL(this.files[0]) //read the file that has been uploaded
+    }
+})
 //attached to the document instead becase it isnt on the page when the page loads thsi happens during post loading
+$("#imageUploadButton").click(() =>{
+    var canvas = cropper.getCroppedCanvas();
+
+    if(canvas == null){
+        alert("could not upload image");
+        return;
+    }
+    //blob objects are used to stroe images an videos!
+    canvas.toBlob((blob) => {
+        var formData = new FormData();
+        formData.append("croppedImage", blob);
+        //this is basically a key value pair !
+
+        $.ajax({
+            url :"/api/users/profilePicture", //route to the backend files
+            type :"POST",
+            data: formData,
+            processData: false, //dont convert the formdata to a string !!
+            contentType : false,
+            success: () => location.reload()
+        })
+
+    })
+})
 $(document).on("click", ".likeButton", (event) => {
     var button = $(event.target);
     var postId = getPostIdFromElement(button);
