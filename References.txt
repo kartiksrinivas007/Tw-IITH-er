@@ -1,0 +1,10 @@
+-------Time Functions-------
+https://gist.github.com/graygilmore/4049249
+Standard Bootstrap
+Cropper JS :-
+https://www.npmjs.com/package/cropperjs
+Jquery:-
+https://codesource.io/building-a-twitter-clone-using-jquery/
+CSS
+https://developer.twitter.com/en/docs/twitter-for-websites/embedded-tweets/guides/css-for-embedded-tweets
+https://codepen.io/odcoder/pen/PBBvXE
