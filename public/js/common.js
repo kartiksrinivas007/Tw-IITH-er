@@ -34,7 +34,7 @@ $("#submitPostButton, #submitReplyButton").click(() => {
         //find id
         var id = button.data().id;
         if( id == null){
-            return alert ("button id is null nigga");
+            return alert ("button id is null");
         }
         data.replyTo = id;
     }
