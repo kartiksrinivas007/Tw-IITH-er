@@ -112,6 +112,29 @@ $("#filePhoto").change(function() { //using arrow function causes a problem use 
         reader.readAsDataURL(this.files[0]) //read the file that has been uploaded
     }
 })
+
+$("#coverPhoto").change(function() { //using arrow function causes a problem use a regular one, also use this instead of event.target
+    // var input = $(event.target);
+    if (this.files && this.files[0]){
+        var reader = new FileReader(); //JS object !
+        reader.onload = (e) => {
+                var image = document.getElementById("coverPreview"); //get the elemtn via JS
+                image.src = e.target.result
+                // $("#imagePreview").attr("src", e.target.result); //setting attributes of the image preview div !!
+                //now we make a cropper object
+                if(cropper !== undefined){
+                    cropper.destroy();
+                }
+                cropper = new Cropper(image , {
+                    aspectRatio : 16/9,
+                    background : false
+                });
+
+
+        }
+        reader.readAsDataURL(this.files[0]) //read the file that has been uploaded
+    }
+})
 //attached to the document instead becase it isnt on the page when the page loads thsi happens during post loading
 $("#imageUploadButton").click(() =>{
     var canvas = cropper.getCroppedCanvas();
@@ -128,6 +151,31 @@ $("#imageUploadButton").click(() =>{
 
         $.ajax({
             url :"/api/users/profilePicture", //route to the backend files
+            type :"POST",
+            data: formData,
+            processData: false, //dont convert the formdata to a string !!
+            contentType : false,
+            success: () => location.reload()
+        })
+
+    })
+})
+
+$("#coverPhotoButton").click(() =>{
+    var canvas = cropper.getCroppedCanvas();
+
+    if(canvas == null){
+        alert("could not upload image");
+        return;
+    }
+    //blob objects are used to stroe images an videos!
+    canvas.toBlob((blob) => {
+        var formData = new FormData();
+        formData.append("croppedImage", blob);
+        //this is basically a key value pair !
+
+        $.ajax({
+            url :"/api/users/coverPhoto", //route to the backend files
             type :"POST",
             data: formData,
             processData: false, //dont convert the formdata to a string !!
@@ -198,17 +246,17 @@ $(document).on("click", ".post", (event) => {
 $(document).on("click", ".followButton", (e) => {
     var button = $(e.target);
     var userId = button.data().user;
-    
+
     $.ajax({
         url: `/api/users/${userId}/follow`,
         type: "PUT",
-        success: (data, status, xhr) => { 
-            
+        success: (data, status, xhr) => {
+
             if (xhr.status == 404) {
                 alert("user not found");
                 return;
             }
-            
+
             var difference = 1;
             if(data.following && data.following.includes(userId)) {
                 button.addClass("following");
@@ -219,7 +267,7 @@ $(document).on("click", ".followButton", (e) => {
                 button.text("Follow");
                 difference = -1;
             }
-            
+
             var followersLabel = $("#followersValue");
             if(followersLabel.length != 0) {
                 var followersText = followersLabel.text();

@@ -84,4 +84,27 @@ router.post("/profilePicture", upload.single("croppedImage") , async(req, res, n
         res.sendStatus(204);
     });
 });
+
+router.post("/coverPhoto", upload.single("croppedImage") , async(req, res, next) =>{
+    //now we will use a package called multer that handles all the nasty image handling stuff
+    //this behaves like middleware we found this online
+    if(!req.file){
+        console.log("No file uploaded with ajax request");
+        return res.sendStatus(400);
+    }
+    //WE MUST HANDLE THIS ROUTE !!!!
+    var filePath = `/uploads/images/${req.file.filename}.png`; //file is a png??
+    var tempPath = req.file.path;
+    var targetPath = path.join(__dirname,`../../${filePath}`)
+    //now move the file from that location to this one since we need it to be acessed for upload purposes on all locations
+    fs.rename(tempPath, targetPath, async error => {
+        if(error != null){
+            console.log(error);
+            return res.sendStatus(400);
+        }
+        req.session.user = await User.findByIdAndUpdate(req.session.user._id, {coverPhoto : filePath},{new : true});
+        //needs to put it inside the session
+        res.sendStatus(204);
+    });
+});
 module.exports = router;
