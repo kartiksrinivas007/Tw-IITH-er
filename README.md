@@ -1,7 +1,6 @@
-## A clone of Twitter
+## A clone of [X.com](https://x.com/home)
 
 This is a clone of Twitter built using ReactJS and MongoDB.
-
 
 ## Instructions to execute 
 
