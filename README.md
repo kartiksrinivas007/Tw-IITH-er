@@ -1,4 +1,9 @@
-## Instructions 
+## A clone of Twitter
+
+This is a clone of Twitter built using ReactJS and MongoDB.
+
+
+## Instructions to execute 
 
 ---
 
